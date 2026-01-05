@@ -1,0 +1,111 @@
+URL choice:
+- walters.app/article/bootstrapping-bun
+- walters.app/posts/bootstrapping-bun
+
+URLs:
+- https://walters.app/ <-- 200
+  implemented by reading index.html and serving with no translation
+  future: markdown support (Vary: Accept)
+- https://walters.app/blog/feed.atom <-- 200
+- https://walters.app/blog <-- 200
+  implemented by reading posts.html and serving with no translation
+  future: generate + cache
+  future: markdown support
+- https://walters.app/blog/ <-- 308 to blog
+- https://walters.app/blog/bootstrapping-bun <-- 200
+  implemented by reading posts/bootstrapping-bun.html and serving with no translation
+  future: markdown support
+- https://walters.app/blog/bootstrapping-bun/ <-- 308 to bootstrapping-bun
+- https://walters.app/blog/bootstrapping-bun.html <-- 308 to bootstrapping-bun
+- https://walters.app/blog/bootstrapping-bun/index.html <-- 404
+
+Rationale: important to not distinguish between collections and individual resources (in other words, a collection is a resource) because a resource may become a collection later, e.g. if bootstrapping-bun became a whole series then I would be in a situation where a collection is forced to *not* have a trailing slash to maintain old links / ranking.
+
+Fields:
+* Slug (immutable)
+* Title
+* Synopsis
+* Content
+* License
+* Created at
+* Updated at
+* Checked for relevance at (is this the same as updated)
+
+P0
+* Memory caching in nginx(?)
+* Cache headers (Cache-Control, ETag, Last-Modified)
+* Directory listing
+* Atom (ensure Content-Type)
+* Dark/light theme
+* iOS 12 compatibility
+* no-js capable
+* Header/footer accents
+* Line numbers on code blocks (that aren't copied along with content)
+
+P1
+* Copy links on headers
+* Sitemap
+
+P2
+* Privacy policy
+* Email subscription (<details><summary></details>)
+* Basic privacy-preserving analytics
+	* top-highlight.js
+	* events
+		* page load
+		* JS / no-JS
+		* abandon
+		* text highlight
+		* scroll
+		* link click
+		* interact w/ subscription box
+	* tags
+		* IP
+		* UA
+		* Cookie?
+		* Referer
+
+P3
+* License
+* WebSub
+* receiving WebMention
+* serve markdown depending on content-type
+
+Inspiration:
+https://kevincox.ca/2022/05/06/rss-feed-best-practices/
+https://indieweb.org/Getting_Started
+https://jamesg.blog/2024/06/06/publish-h-feed
+
+Toolchains:
+- Write plain HTML in emacs.
+	- Write a tool which inserts header/footer.
+	- Write a tool which generates home feed from post HTML docs.
+- Write HTML x-expressions in emacs.
+- Write Markdown and annotate with pieces (e.g. frontmatter) required for microformats2.
+
+Thing 1: markup/almost-html --> html with microformats2 (or write directly)
+Thing 2: page template w/ html include for content
+Thing 3: generate home feed
+Thing 4: home page template w/ html include for feed
+Thing 5: Makefile
+
+Key decision: should the home page iterate over posts or should it include posts output?
+
+Posts:
+<include posts>
+
+vs
+
+Posts:
+<ul>
+{% for post in posts}
+	<li>post</li>
+{%}
+</ul>
+
+Tool options:
+- https://github.com/greghendershott/blog/blob/master/Makefile
+- https://docs.racket-lang.org/pollen/quick-tour.html
+- https://soupault.net/
+- https://github.com/kartikprabhu/hfeed2atom
+- https://indieweb.org/granary
