@@ -1,3 +1,11 @@
+* implement posts/index.html.pm
+* implement "recent posts" on homepage
+* implement h-feed on homepage
+* implement h-card on homepage
+* implement inlining of stylesheet and short enough images (conditioned on size)
+* implement atom feed
+* implement "recent posts" below posts?
+
 URL choice:
 - walters.app/article/bootstrapping-bun
 - walters.app/posts/bootstrapping-bun

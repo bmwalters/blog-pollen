@@ -1,4 +1,6 @@
 #lang pollen
 
+@(require (prefix-in posts: "posts/index.ptree"))
+
 @posts{
-  @(dynamic-require "posts/index.ptree" 'doc)}
+  @posts:doc}

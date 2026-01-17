@@ -1,7 +1,6 @@
-posts/index.ptree: all-posts-files
-	pass
+.PHONY: site
 
-.site: posts.ptree
+site:
 	raco setup -p
 	raco pollen render -p
 

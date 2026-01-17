@@ -13,8 +13,8 @@
 
 (define-runtime-path posts-sources-dir ".")
 
-(define (get-post-doc path)
-  (get-doc (build-path posts-sources-dir path)))
+(define (get-post-metas path)
+  (get-metas (build-path posts-sources-dir path)))
 
 (define (select-created-at p)
   (select 'created p))
@@ -27,16 +27,18 @@
 ;; (A file is a pollen source if ->output-path transforms it)
 (define (post-source? path)
   (and (not (equal? path (->output-path path)))
-       (not (template-file? path))))
+       (not (template-file? path))
+       (not (equal? #"index.html" (->output-path path)))
+       (not (equal? #"feed.atom" (->output-path path)))))
 
 (define posts
   (let* ([posts-input-paths
           (filter post-source?
                   (directory-list posts-sources-dir))]
          [posts-sorted
-          (sort posts-input-paths
-            (lambda (p1 p2) string>?)
-            #:key (compose select-created-at get-post-doc))])
+          (sort (filter (compose select-created-at get-post-metas) posts-input-paths)
+            string>?
+            #:key (compose select-created-at get-post-metas))])
     (map (compose string->symbol path->string ->output-path) posts-sorted)))
 
 (provide doc)

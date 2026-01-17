@@ -1,2 +1,2 @@
 compiled/
-*.html
+*.{atom,css,html,xml}
