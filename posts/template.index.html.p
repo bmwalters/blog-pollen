@@ -17,8 +17,7 @@
     </header>
     @(->html doc #:tag 'div)
     <nav>
-      @(->html (maybe-render-pages (cdr (get-pagetree "posts.ptree"))))
-      <p><a class="feed-link" href="feed.atom">Feed</a></p>
+      @(->html (maybe-render-pages (cddr (get-pagetree "index.ptree")) #:h-entries? #t))
     </nav>
   </main>
 </body>
