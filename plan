@@ -1,4 +1,3 @@
-* favicon
 * implement inlining of stylesheet and short enough images (conditioned on size)
 * implement "recent posts" below posts?
 * author-editor separation (feed author separate from post author)
