@@ -30,8 +30,10 @@
 (define (article-anchor dest . exp)
   (txexpr 'a `((href ,(string-append (symbol->string dest) ".html"))) exp))
 
+; TODO: create inline style block when small enough
 (define (resource-ref-stylesheet-elem #:path path . exp)
   (txexpr 'link `((rel "stylesheet") (href ,path))))
 
+; TODO: create inline data url when small enough
 (define (resource-ref-url . exp)
   "images/feed.svg")

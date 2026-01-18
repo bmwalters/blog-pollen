@@ -2,5 +2,6 @@
 
 @(require (prefix-in posts: "posts/index.ptree"))
 
+index.html
 @posts{
   @posts:doc}

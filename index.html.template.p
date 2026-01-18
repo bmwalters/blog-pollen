@@ -18,13 +18,12 @@
     </header>
     @(->html doc #:tag 'div #:attrs '((class "e-content")))
     <nav>
-      <ul>
-        <li>Pages @(current-pagetree)
-          <ul>
-            <li>asdf</li>
-          </ul>
-        </li>
-      </ul>
+      @(letrec ([render-page (lambda (p)
+                              `(li ,(symbol->string p)
+                                   ,(list-pages (or (children p) '()))))]
+                [list-pages (lambda (pagelist)
+                                `(ul ,@@(map render-page pagelist)))])
+          (->html (list-pages (other-siblings here))))
     </nav>
   </main>
 </body>

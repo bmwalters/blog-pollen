@@ -28,15 +28,15 @@
 (define (post-source? path)
   (and (not (equal? path (->output-path path)))
        (not (template-file? path))
-       (not (equal? #"index.html" (->output-path path)))
-       (not (equal? #"feed.atom" (->output-path path)))))
+       (not (equal? (string->path "index.html") (->output-path path)))
+       (not (equal? (string->path "feed.atom") (->output-path path)))))
 
 (define posts
   (let* ([posts-input-paths
           (filter post-source?
                   (directory-list posts-sources-dir))]
          [posts-sorted
-          (sort (filter (compose select-created-at get-post-metas) posts-input-paths)
+          (sort posts-input-paths
             string>?
             #:key (compose select-created-at get-post-metas))])
     (map (compose string->symbol path->string ->output-path) posts-sorted)))
