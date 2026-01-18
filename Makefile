@@ -1,6 +1,11 @@
-.PHONY: site
+.PHONY: site clean
 
-site:
-	raco setup -p
-	raco pollen render -p
+publish:
+	POLLEN_RELEASE=1 raco pollen render -p
+	raco pollen publish
 
+clean:
+	raco pollen reset
+
+start:
+	raco pollen start

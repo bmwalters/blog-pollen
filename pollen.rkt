@@ -16,6 +16,9 @@
 
 (provide (all-defined-out))
 
+(define (release-mode?)
+  (equal? (getenv "POLLEN_RELEASE") "1"))
+
 (define (root . exp)
   `(root ,@(decode-elements exp
                             #:exclude-tags '(pre)
@@ -43,6 +46,32 @@
 (define (resource-ref-url . exp)
   "images/feed.svg")
 
+; Transforms a path to canonical href form for URLs.
+; Matches the project nginx config and must be updated when that changes.
+; Only performs transformations in release mode (POLLEN_RELEASE=1).
+(define (canonical-href path)
+  (if (release-mode?)
+      (let* ([s path]
+             ; Strip trailing index.html
+             [s (if (string-suffix? s "/index.html")
+                    (substring s 0 (- (string-length s) 10))
+                    (if (string=? s "index.html")
+                        ""
+                        s))]
+             ; Strip trailing .html
+             [s (if (string-suffix? s ".html")
+                    (substring s 0 (- (string-length s) 5))
+                    s)]
+             ; Strip trailing / (if not literal /)
+             [s (if (and (string-suffix? s "/")
+                        (> (string-length s) 1))
+                    (substring s 0 (- (string-length s) 1))
+                    s)]
+             ; Ensure root path is /
+             [s (if (string=? s "") "/" s)])
+        s)
+      path))
+
 (define (maybe-get-metas p)
   ; Try to get metas for a pagenode if a source file exists
   ; Uses current-directory which is set to the source file's directory during rendering
@@ -67,7 +96,7 @@
                                                               (not (or (page-name-is? "index.html" c)
                                                                        (page-name-is? "feed.atom" c))))
                                                             p-children)])
-                            `(li (a ((href ,ps)) ,p-title)
+                            `(li (a ((href ,(canonical-href ps))) ,p-title)
                                ,@(if p-created
                                      `(" " (time ((datetime ,p-created)) ,p-created))
                                      '())

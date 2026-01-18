@@ -1,5 +1,3 @@
-* canonicalize path (add comment saying it must match nginx config) to homepage and post list
-* add post title, timestamp, and synopsis to posts on post list and homepage
 * implement h-feed on posts page
 * set up machine readable feed links on homepage, post list, and post template
 * implement atom feed

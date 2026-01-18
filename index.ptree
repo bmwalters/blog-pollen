@@ -1,10 +1,15 @@
 #lang pollen
 
 @(require (prefix-in posts: "posts/index.ptree"))
-@(define (prefix-posts pt)
-   (map (lambda (p) (string->symbol (string-append "posts/" (symbol->string p))))
-        (cdr pt)))
+
+@(define (prefix-pagetree prefix pt)
+   (define (prefix-sym s) (string->symbol (string-append prefix (symbol->string s))))
+   (define children (map prefix-sym (cdr pt)))
+   @; return index.html as the first (parent) element when present
+   @; pollen will splice into ours when returned parent is pagetree-root
+   (if (eq? (car children) (prefix-sym 'index.html))
+       children
+       (cons 'pagetree-root children)))
 
 index.html
-@posts{
-  @(apply pagetree-root (prefix-posts posts:doc))}
+@(prefix-pagetree "posts/" posts:doc)
