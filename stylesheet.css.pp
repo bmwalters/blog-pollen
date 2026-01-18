@@ -79,6 +79,10 @@ header nav li, footer nav li {
   display: inline-block;
 }
 
+footer nav li:last-child {
+  margin-left: auto;
+}
+
 .highlight pre {
   overflow-x: scroll;
 }

@@ -26,7 +26,10 @@
     <footer>
       <nav>
         <ul>
-          <li><a href="">Discuss on Hacker News</a></li>
+          @(let ([hn-id (select-from-metas 'hn-id metas)])
+             (if hn-id
+                 (->html `(li (a [[href ,(string-append "https://news.ycombinator.com/item?id=" hn-id)]] "Discuss on Hacker News")))
+                 ""))
           <li><a class="feed-link" href="feed.atom">Feed</a></li>
         </ul>
       </nav>
