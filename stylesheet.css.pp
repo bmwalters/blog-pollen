@@ -32,7 +32,7 @@ body {
 }
 
 body {
-  max-width: 60em;
+  max-width: min(60em, calc(100% - 2em));
   margin-left: auto;
   margin-right: auto;
 }

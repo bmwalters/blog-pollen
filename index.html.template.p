@@ -1,6 +1,6 @@
 @(require racket/function racket/string)
 <!doctype html>
-<html lang="en-US" class="h-entry">
+<html lang="en-US">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
@@ -8,15 +8,15 @@
   @(->html (resource-ref-stylesheet-elem #:path "../stylesheet.css"))
 </head>
 <body>
-  <main>
+  <main class="h-card">
     <header>
       <nav>
         <ul>
-          <li><a class="p-author h-card" href="/">Bradley Walters</a></li>
+          <li><a class="p-name p-author u-url" href="/">Bradley Walters</a></li>
         </ul>
       </nav>
     </header>
-    @(->html doc #:tag 'div #:attrs '((class "e-content")))
+    @(->html doc #:tag 'div)
     <nav>
       @(letrec ([page-name-is? (lambda (name p)
                                   (let ([ps (symbol->string p)])

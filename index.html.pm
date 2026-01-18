@@ -4,4 +4,4 @@
 
 @(define-meta title "Bradley Walters")
 
-Hi! You can find me on @a[#:href "https://github.com/bmwalters"]{GitHub}.
+Hi! Find me as @a[#:href "https://github.com/bmwalters" #:rel "me"]{@bmwalters on GitHub}.

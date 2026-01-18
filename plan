@@ -1,10 +1,12 @@
 * implement posts/index.html.pm
-* implement "recent posts" on homepage (with timestamp)
 * canonicalize path (add comment saying it must match nginx config) to posts list
-* implement h-feed on homepage
+* add timestamp to posts on homepage
+* implement h-feed on posts page
+* add rel links to feeds
 * implement h-card on homepage
-* implement inlining of stylesheet and short enough images (conditioned on size)
 * implement atom feed
+* favicon
+* implement inlining of stylesheet and short enough images (conditioned on size)
 * implement "recent posts" below posts?
 
 URL choice:
