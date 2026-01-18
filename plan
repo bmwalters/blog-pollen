@@ -1,9 +1,7 @@
-* implement posts/index.html.pm
-* canonicalize path (add comment saying it must match nginx config) to posts list
-* add timestamp to posts on homepage
+* canonicalize path (add comment saying it must match nginx config) to homepage and post list
+* add post title, timestamp, and synopsis to posts on post list and homepage
 * implement h-feed on posts page
-* add rel links to feeds
-* implement h-card on homepage
+* set up machine readable feed links on homepage, post list, and post template
 * implement atom feed
 * favicon
 * implement inlining of stylesheet and short enough images (conditioned on size)

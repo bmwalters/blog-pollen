@@ -1,7 +1,7 @@
 #lang pollen
 
-@(define-meta template "index.html.template.p")
-
+@(define-meta template "template.index.html.p")
+@(define-meta author "Bradley Walters")
 @(define-meta title "Bradley Walters")
 
-Hi! Find me as @a[#:href "https://github.com/bmwalters" #:rel "me"]{@bmwalters on GitHub}.
+@p{Hi! Find me as @a[#:href "https://github.com/bmwalters" #:rel "me"]{@"@"bmwalters} on GitHub.}

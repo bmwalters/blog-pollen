@@ -4,6 +4,7 @@
 @define-meta[created]{2026-01-17}
 @define-meta[synopsis]{An introduction to the creduce tool plus a reusable LLM agent skill definition.}
 @define-meta[title]{Detour: to creduce}
+@define-meta[author]{Bradley Walters}
 @; TODO: @license{}... but does that apply to the rendered content or this source file (or both?)
 
 @a[#:href "https://github.com/csmith-project/creduce"]{creduce} is a tool to automatically create a minimal reproduction case from interesting code. I thought I had a use case for exactly that when I was working to @article-anchor['bootstrapping-bun]{make Bun bootstrappable}.

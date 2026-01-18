@@ -1,3 +1,5 @@
 #lang pollen
 
-@(define-meta template "index.html.template.p")
+@(define-meta template "template.index.html.p")
+
+@h1{Posts}

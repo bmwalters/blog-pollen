@@ -7,7 +7,9 @@
 (require txexpr)
 (require pollen/unstable/pygments)
 (require pollen/decode)
+(require pollen/pagetree)
 (require net/url)
+(require racket/function)
 
 (provide (all-defined-out))
 
@@ -37,3 +39,27 @@
 ; TODO: create inline data url when small enough
 (define (resource-ref-url . exp)
   "images/feed.svg")
+
+(define (maybe-render-pages pagelist)
+  (letrec ([page-name-is? (lambda (name p)
+                            (let ([ps (symbol->string p)])
+                              (or (string=? ps name)
+                                  (string-suffix? ps (string-append "/" name)))))]
+           [render-page (lambda (p)
+                          (let* ([ps (symbol->string p)]
+                                 [p-children (or (children p) '())]
+                                 [maybe-feed-page (findf (curry page-name-is? "feed.atom") p-children)]
+                                 [filtered-children (filter (lambda (c)
+                                                              (not (or (page-name-is? "index.html" c)
+                                                                       (page-name-is? "feed.atom" c))))
+                                                            p-children)])
+                            `(li (a ((href ,ps)) ,ps)
+                               ,@(if maybe-feed-page
+                                     `(" " (a ((href ,(symbol->string maybe-feed-page))
+                                               (class "feed-link"))
+                                              "Feed"))
+                                     '())
+                               ,@(maybe-render-pages filtered-children))))])
+    (if pagelist
+        `((ul ,@(map render-page pagelist)))
+        '())))

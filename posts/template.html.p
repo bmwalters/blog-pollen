@@ -12,7 +12,7 @@
     <header>
       <nav>
 	<ul>
-	  <li><a class="p-author h-card" href="/">Bradley Walters</a></li>
+	  <li><a class="p-author h-card" href="/">@(select 'author metas)</a></li>
 	  <li><a href="/posts">Posts</a></li>
 	</ul>
       </nav>
