@@ -20,9 +20,9 @@
     @(->html doc #:tag 'div #:attrs '((class "e-content")))
     <nav>
       @(letrec ([render-page (lambda (parent-path p)
-                               (let* ([ps (symbol->string p)]) 
-                                     ([page-path (if parent-path (build-path parent-path ps) ps)])
-                                 `(li (a ((href ,page-path)) ,ps)
+                               (let* ([ps (symbol->string p)]
+                                      [page-path (if parent-path (build-path parent-path ps) (build-path ps))])
+                                 `(li (a ((href ,(path->string page-path))) ,ps)
                                     ,@(maybe-render-pages (children p) page-path))))]
                 [maybe-render-pages (lambda (pagelist parent-path)
                                       (if pagelist

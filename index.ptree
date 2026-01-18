@@ -1,7 +1,10 @@
 #lang pollen
 
 @(require (prefix-in posts: "posts/index.ptree"))
+@(define (prefix-posts pt)
+   (map (lambda (p) (string->symbol (string-append "posts/" (symbol->string p))))
+        (cdr pt)))
 
 index.html
 @posts{
-  @posts:doc}
+  @(apply pagetree-root (prefix-posts posts:doc))}

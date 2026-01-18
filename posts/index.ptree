@@ -1,45 +1,7 @@
-#lang racket
+#lang pollen
 
-;; Generates a pagetree by sorting posts in posts-sources-dir
-;; by latest-first using the @created{YYYY-MM-DD} tag.
-;; The resulting pagetree is suitable for a feed or sitemap.
+@(require (prefix-in posts: "posts.ptree"))
 
-(require racket/runtime-path)
-(require racket/string)
-
-(require pollen/core)
-(require pollen/file)
-(require pollen/setup)  ; for pollen-template-prefix
-
-(define-runtime-path posts-sources-dir ".")
-
-(define (get-post-metas path)
-  (get-metas (build-path posts-sources-dir path)))
-
-(define (select-created-at p)
-  (select 'created p))
-
-(define (template-file? path)
-  (define name (path->string (file-name-from-path path)))
-  (string-prefix? name pollen-template-prefix))
-
-;; A post is a pollen source that's not a template
-;; (A file is a pollen source if ->output-path transforms it)
-(define (post-source? path)
-  (and (not (equal? path (->output-path path)))
-       (not (template-file? path))
-       (not (equal? (string->path "index.html") (->output-path path)))
-       (not (equal? (string->path "feed.atom") (->output-path path)))))
-
-(define posts
-  (let* ([posts-input-paths
-          (filter post-source?
-                  (directory-list posts-sources-dir))]
-         [posts-sorted
-          (sort posts-input-paths
-            string>?
-            #:key (compose select-created-at get-post-metas))])
-    (map (compose string->symbol path->string ->output-path) posts-sorted)))
-
-(provide doc)
-(define doc `(pagetree-root ,@posts))
+index.html
+feed.atom
+@posts:doc
