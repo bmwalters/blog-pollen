@@ -1,3 +1,4 @@
+@(require racket/function)
 <!doctype html>
 <html lang="en-US" class="h-entry">
 <head>
@@ -18,12 +19,16 @@
     </header>
     @(->html doc #:tag 'div #:attrs '((class "e-content")))
     <nav>
-      @(letrec ([render-page (lambda (p)
-                              `(li ,(symbol->string p)
-                                   ,(list-pages (or (children p) '()))))]
-                [list-pages (lambda (pagelist)
-                                `(ul ,@@(map render-page pagelist)))])
-          (->html (list-pages (other-siblings here))))
+      @(letrec ([render-page (lambda (parent-path p)
+                               (let* ([ps (symbol->string p)]) 
+                                     ([page-path (if parent-path (build-path parent-path ps) ps)])
+                                 `(li (a ((href ,page-path)) ,ps)
+                                    ,@(maybe-render-pages (children p) page-path))))]
+                [maybe-render-pages (lambda (pagelist parent-path)
+                                      (if pagelist
+                                        `((ul ,@(map (curry render-page parent-path) pagelist)))
+                                        '()))])
+          (->html (maybe-render-pages (other-siblings here) #f)))
     </nav>
   </main>
 </body>
