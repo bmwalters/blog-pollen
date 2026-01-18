@@ -85,30 +85,27 @@
                               (or (string=? ps name)
                                   (string-suffix? ps (string-append "/" name)))))]
            [render-page (lambda (p)
-                          (let* ([ps (symbol->string p)]
-                                 [p-metas (maybe-get-metas p)]
-                                 [p-title (or (and p-metas (select 'title p-metas)) ps)]
-                                 [p-created (and p-metas (select 'created p-metas))]
-                                 [p-synopsis (and p-metas (select 'synopsis p-metas))]
-                                 [p-children (or (children p) '())]
-                                 [maybe-feed-page (findf (curry page-name-is? "feed.atom") p-children)]
-                                 [filtered-children (filter (lambda (c)
-                                                              (not (or (page-name-is? "index.html" c)
-                                                                       (page-name-is? "feed.atom" c))))
-                                                            p-children)])
-                            `(li (a ((href ,(canonical-href ps))) ,p-title)
-                               ,@(if p-created
-                                     `(" " (time ((datetime ,p-created)) ,p-created))
-                                     '())
-                               ,@(if p-synopsis
-                                     `((p ,p-synopsis))
-                                     '())
-                               ,@(if maybe-feed-page
-                                     `(" " (a ((href ,(symbol->string maybe-feed-page))
-                                               (class "feed-link"))
-                                              "Feed"))
-                                     '())
-                               ,@(maybe-render-pages filtered-children))))])
+                          (let ([ps (symbol->string p)])
+                            (cond
+                              [(page-name-is? "feed.atom" p)
+                               `(li (a ((href ,ps) (class "feed-link")) "Feed"))]
+                              [else
+                               (let* ([p-metas (maybe-get-metas p)]
+                                      [p-title (or (and p-metas (select 'title p-metas)) ps)]
+                                      [p-created (and p-metas (select 'created p-metas))]
+                                      [p-synopsis (and p-metas (select 'synopsis p-metas))]
+                                      [p-children (or (children p) '())]
+                                      [child-lis (map render-page p-children)])
+                                 `(li (p (a ((href ,(canonical-href ps))) ,p-title)
+                                         ,@(if p-created
+                                               `(" " (time ((datetime ,p-created)) ,p-created))
+                                               '()))
+                                      ,@(if p-synopsis
+                                            `((p ,p-synopsis))
+                                            '())
+                                      ,@(if (null? child-lis)
+                                            '()
+                                            `((ul ,@child-lis)))))])))])
     (if pagelist
         `((ul ,@(map render-page pagelist)))
         '())))

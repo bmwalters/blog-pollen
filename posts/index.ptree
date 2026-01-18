@@ -3,5 +3,5 @@
 @(require (prefix-in posts: "posts.ptree"))
 
 index.html
-feed.atom
 @posts:doc
+feed.atom
