@@ -6,12 +6,12 @@
   <title>Posts</title>
   @(->html (resource-ref-stylesheet-elem #:path "../stylesheet.css"))
 </head>
-<body>
-  <main class="h-card">
+<body class="h-feed">
+  <main>
     <header>
       <nav>
         <ul>
-          <li><a class="p-name p-author u-url" href="/">Bradley Walters</a></li>
+          <li><a class="p-author u-url h-card" href="/">Bradley Walters</a></li>
         </ul>
       </nav>
     </header>

@@ -79,7 +79,7 @@
          [src-path (get-source out-path)])
     (if src-path (get-metas src-path) #f)))
 
-(define (maybe-render-pages pagelist)
+(define (maybe-render-pages pagelist #:h-entries? [h-entries? #f])
   (letrec ([page-name-is? (lambda (name p)
                             (let ([ps (symbol->string p)])
                               (or (string=? ps name)
@@ -94,14 +94,17 @@
                                       [p-title (or (and p-metas (select 'title p-metas)) ps)]
                                       [p-created (and p-metas (select 'created p-metas))]
                                       [p-synopsis (and p-metas (select 'synopsis p-metas))]
+                                      [p-url (canonical-href ps)]
                                       [p-children (or (children p) '())]
-                                      [child-lis (map render-page p-children)])
-                                 `(li (p (a ((href ,(canonical-href ps))) ,p-title)
+                                      [child-lis (map render-page p-children)]
+                                      [li-attrs (if h-entries? '((class "h-entry")) '())])
+                                 `(li ,li-attrs
+                                      (p (a ((class "u-url p-name") (href ,p-url)) ,p-title)
                                          ,@(if p-created
-                                               `(" " (time ((datetime ,p-created)) ,p-created))
+                                               `(" " (time ((class "dt-published") (datetime ,p-created)) ,p-created))
                                                '()))
                                       ,@(if p-synopsis
-                                            `((p ,p-synopsis))
+                                            `((p ((class "p-summary")) ,p-synopsis))
                                             '())
                                       ,@(if (null? child-lis)
                                             '()

@@ -1,4 +1,3 @@
-* implement h-feed on posts page
 * set up machine readable feed links on homepage, post list, and post template
 * implement atom feed
 * favicon
