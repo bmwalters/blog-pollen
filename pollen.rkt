@@ -8,6 +8,9 @@
 (require pollen/unstable/pygments)
 (require pollen/decode)
 (require pollen/pagetree)
+(require pollen/core)
+(require pollen/file)
+(require pollen/setup)
 (require net/url)
 (require racket/function)
 
@@ -40,6 +43,13 @@
 (define (resource-ref-url . exp)
   "images/feed.svg")
 
+(define (maybe-get-metas p)
+  ; Try to get metas for a pagenode if a source file exists
+  ; Uses current-directory which is set to the source file's directory during rendering
+  (let* ([out-path (build-path (current-directory) (symbol->string p))]
+         [src-path (get-source out-path)])
+    (if src-path (get-metas src-path) #f)))
+
 (define (maybe-render-pages pagelist)
   (letrec ([page-name-is? (lambda (name p)
                             (let ([ps (symbol->string p)])
@@ -47,13 +57,23 @@
                                   (string-suffix? ps (string-append "/" name)))))]
            [render-page (lambda (p)
                           (let* ([ps (symbol->string p)]
+                                 [p-metas (maybe-get-metas p)]
+                                 [p-title (or (and p-metas (select 'title p-metas)) ps)]
+                                 [p-created (and p-metas (select 'created p-metas))]
+                                 [p-synopsis (and p-metas (select 'synopsis p-metas))]
                                  [p-children (or (children p) '())]
                                  [maybe-feed-page (findf (curry page-name-is? "feed.atom") p-children)]
                                  [filtered-children (filter (lambda (c)
                                                               (not (or (page-name-is? "index.html" c)
                                                                        (page-name-is? "feed.atom" c))))
                                                             p-children)])
-                            `(li (a ((href ,ps)) ,ps)
+                            `(li (a ((href ,ps)) ,p-title)
+                               ,@(if p-created
+                                     `(" " (time ((datetime ,p-created)) ,p-created))
+                                     '())
+                               ,@(if p-synopsis
+                                     `((p ,p-synopsis))
+                                     '())
                                ,@(if maybe-feed-page
                                      `(" " (a ((href ,(symbol->string maybe-feed-page))
                                                (class "feed-link"))
