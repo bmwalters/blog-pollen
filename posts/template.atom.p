@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+@(require pollen/unstable/typography)
 @(define site-author (select 'author metas))
 @(define root-url (select 'root-url metas))
 @(define posts (other-siblings here))
@@ -13,7 +14,7 @@
              "1970-01-01T00:00:00Z"))
        "1970-01-01T00:00:00Z"))
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>@|site-author|' Blog</title>
+  <title>@(smart-quotes (select 'title metas))</title>
   <link href="@|root-url|@(symbol->string here)" rel="self" type="application/atom+xml"/>
   <link href="@|root-url|@(canonical-href (symbol->string (parent here)))" rel="alternate" type="text/html"/>
   <updated>@(updated-date posts)</updated>
