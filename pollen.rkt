@@ -35,7 +35,7 @@
     (txexpr 'a `((href ,dest)) `(,(string-append (string-join repo "/") "#" prno)))))
 
 (define (article-anchor dest . exp)
-  (txexpr 'a `((href ,(string-append (symbol->string dest) ".html"))) exp))
+  (txexpr 'a `((href ,(canonical-href (string-append (symbol->string dest) ".html")))) exp))
 
 ; TODO: create inline style block when small enough
 (define (resource-ref-stylesheet-elem #:path path . exp)

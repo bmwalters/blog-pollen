@@ -1,6 +1,7 @@
 .PHONY: site clean
 
-publish:
+# clean first as cache doesn't know about release flag
+publish: clean
 	POLLEN_RELEASE=1 raco pollen render -p
 	raco pollen publish
 

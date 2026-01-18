@@ -36,14 +36,17 @@
                      [p-updated (if p-created
                                     (string-append p-created "T00:00:00Z")
                                     "1970-01-01T00:00:00Z")]
-                     [p-id (select 'tag-uri p-metas)])
-                `(entry
-                    (title ,p-title)
-                    (link [[href ,(string-append root-url (canonical-href ps))]
-                           [rel "alternate"]
-                           [type "text/html"]])
-                   (id ,p-id)
-                   (published ,p-updated)
-                   (updated ,p-updated)
-                   (summary [[type "text"]] ,p-synopsis))))
+                      [p-id (select 'tag-uri p-metas)]
+                      [p-doc (and p-path (cached-doc p-path))]
+                      [p-html (if p-doc (->html p-doc #:tag 'article) "")])
+                 `(entry
+                     (title ,p-title)
+                     (link [[href ,(string-append root-url (canonical-href ps))]
+                            [rel "alternate"]
+                            [type "text/html"]])
+                    (id ,p-id)
+                    (published ,p-updated)
+                    (updated ,p-updated)
+                    (summary [[type "text"]] ,p-synopsis)
+                    (content [[type "html"]] ,p-html))))
             posts)))
