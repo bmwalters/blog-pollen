@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
-  <title>Posts</title>
+  <title>@(select 'title metas)</title>
   @(->html (resource-ref-stylesheet-elem #:path "../stylesheet.css"))
+  <link rel="alternate" type="application/atom+xml" href="feed.atom" title="@(select 'author metas)' Blog Feed">
 </head>
 <body class="h-feed">
   <main>
