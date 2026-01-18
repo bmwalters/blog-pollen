@@ -13,7 +13,6 @@
 (require pollen/setup)
 (require net/url)
 (require racket/function)
-
 (provide (all-defined-out))
 
 (define (release-mode?)
@@ -71,6 +70,15 @@
              [s (if (string=? s "") "/" s)])
         s)
       path))
+
+; Inverse of pollen/pagetree's path->pagenode.
+; Converts a pagenode to a source path by stripping the relative-to prefix
+; and running the result through get-source.
+(define (pagenode->path p [relative-to (current-directory)])
+  (let* ([p-str (if (symbol? p) (symbol->string p) p)]
+         [full-path (build-path (current-project-root) p-str)]
+         [rel-path (find-relative-path relative-to full-path)])
+    (get-source rel-path)))
 
 (define (maybe-get-metas p)
   ; Try to get metas for a pagenode if a source file exists
