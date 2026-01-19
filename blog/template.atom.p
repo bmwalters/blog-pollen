@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 @(require pollen/unstable/typography)
+@(require pollen/file)
 @(define site-author (select 'author metas))
 @(define root-url (select 'root-url metas))
 @(define posts (other-siblings here))
 @(define (updated-date posts)
    (if (pair? posts)
        (let* ([p (car posts)]
-              [p-path (pagenode->path p)]
+              [p-path (get-source (pagenode->path p))]
               [p-metas (and p-path (get-metas p-path))]
               [created (and p-metas (select 'created p-metas))])
          (if created
@@ -23,7 +24,7 @@
 @(->html
   (map (lambda (p)
          (let* ([ps (symbol->string p)]
-                [p-path (pagenode->path p)]
+                [p-path (get-source (pagenode->path p))]
                 [p-metas (and p-path (get-metas p-path))]
                 [p-title (or (and p-metas (select 'title p-metas)) ps)]
                 [p-created (and p-metas (select 'created p-metas))]

@@ -18,7 +18,7 @@
     </header>
     @(->html doc #:tag 'div)
     <nav>
-      @(->html (maybe-render-pages (cddr (get-pagetree "index.ptree")) #:h-entries? #t))
+      @(->html (maybe-render-pages (children here) #:h-entries? #t))
     </nav>
   </main>
 </body>
