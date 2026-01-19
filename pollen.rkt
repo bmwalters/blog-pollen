@@ -35,7 +35,7 @@
          (prno (list-ref path-parts (+ pull-idx 1)))]
     (txexpr 'a `((href ,dest)) `(,(string-append (string-join repo "/") "#" prno)))))
 
-(define (article-anchor dest . exp)
+(define (article-a dest . exp)
   (txexpr 'a `((href ,(canonical-href (string-append (symbol->string dest) ".html")))) exp))
 
 ; Maximum size in bytes for inlining resources

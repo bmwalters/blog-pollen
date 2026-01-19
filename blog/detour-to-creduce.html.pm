@@ -7,7 +7,7 @@
 @define-meta[tag-uri]{tag:walters.app,2026:detour-to-creduce}
 @; TODO: @license{}... but does that apply to the rendered content or this source file (or both?)
 
-@a[#:href "https://github.com/csmith-project/creduce"]{creduce} is a tool to automatically create a minimal reproduction case from interesting code. I thought I had a use case for exactly that when I was working to @article-anchor['bootstrapping-bun]{make Bun bootstrappable}.
+@a[#:href "https://github.com/csmith-project/creduce"]{creduce} is a tool to automatically create a minimal reproduction case from interesting code. I thought I had a use case for exactly that when I was working to @article-a['bootstrapping-bun]{make Bun bootstrappable}.
 
 While debugging a tricky @code{SIGABRT} when loading Bun's @code{assert.js} builtin from WebKit JavaScriptCore, I assumed there must be some syntax incompatibility hidden inside the huge JS file. If this were the case then creduce would be the perfect tool for the job.
 
