@@ -12,6 +12,7 @@
 (require pollen/file)
 (require pollen/setup)
 (require net/url)
+(require net/base64)
 (require racket/function)
 (provide (all-defined-out))
 
@@ -37,34 +38,54 @@
 (define (article-anchor dest . exp)
   (txexpr 'a `((href ,(canonical-href (string-append (symbol->string dest) ".html")))) exp))
 
-; Maximum size in bytes for inlining stylesheets
-(define inline-stylesheet-max-size 4096)
+; Maximum size in bytes for inlining resources
+(define inline-resource-max-size 4096)
 
 ; Creates a stylesheet reference, inlining the CSS if small enough.
-; In release mode and when the stylesheet is below inline-stylesheet-max-size,
+; In release mode and when the stylesheet is below inline-resource-max-size,
 ; emits an inline <style> block instead of a <link> element.
 (define (resource-ref-stylesheet-elem #:path path . exp)
-  ; Returns the CSS content for a stylesheet path, triggering preprocessing if needed.
-  ; The path should be relative to current-directory (which is set during rendering).
-  ; Returns #f if the file doesn't exist or can't be read.
-  (define (get-stylesheet-content path)
+  (define (get-content path)
     (define full-path (build-path (current-directory) path))
     (define src-path (get-source full-path))
     (cond
-      ; If there's a pollen source (e.g., .pp preprocessor), use get-doc to get processed content
       [src-path (get-doc src-path)]
-      ; Otherwise read the file directly if it exists
       [(file-exists? full-path) (file->string full-path)]
       [else #f]))
-  
-  (define content (and (release-mode?) (get-stylesheet-content path)))
-  (if (and content (<= (string-length content) inline-stylesheet-max-size))
+  (define content (and (release-mode?) (get-content path)))
+  (if (and content (<= (string-length content) inline-resource-max-size))
       (txexpr 'style '() (list content))
       (txexpr 'link `((rel "stylesheet") (href ,path)))))
 
-; TODO: create inline data url when small enough
-(define (resource-ref-url . exp)
-  "images/feed.svg")
+; Returns a URL for a resource, using a data URI if small enough in release mode.
+(define (resource-ref-url path)
+  (define (path->mime-type path)
+    (define ext (path-get-extension (if (path? path) path (string->path path))))
+    (case ext
+      [(#".svg") "image/svg+xml"]
+      [(#".png") "image/png"]
+      [(#".jpg" #".jpeg") "image/jpeg"]
+      [(#".gif") "image/gif"]
+      [(#".webp") "image/webp"]
+      [(#".ico") "image/x-icon"]
+      [else "application/octet-stream"]))
+  (define (get-content path)
+    (define full-path (build-path (current-directory) path))
+    (define src-path (get-source full-path))
+    (cond
+      [src-path (let ([content (get-doc src-path)])
+                  (if (string? content)
+                      (string->bytes/utf-8 content)
+                      content))]
+      [(file-exists? full-path) (file->bytes full-path)]
+      [else #f]))
+  (define (make-data-uri content mime-type)
+    (define base64-content (base64-encode content #""))
+    (string-append "data:" mime-type ";base64," (bytes->string/utf-8 base64-content)))
+  (define content (and (release-mode?) (get-content path)))
+  (if (and content (<= (bytes-length content) inline-resource-max-size))
+      (make-data-uri content (path->mime-type path))
+      path))
 
 ; Transforms a path to canonical href form for URLs.
 ; Matches the project nginx config and must be updated when that changes.
