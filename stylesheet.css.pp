@@ -87,6 +87,24 @@ footer nav li:last-child {
   overflow-x: scroll;
 }
 
+/* Heading anchors */
+.heading-anchor {
+  opacity: 0;
+  margin-left: 0.3em;
+  text-decoration: none;
+  font-weight: normal;
+}
+
+.heading-anchor::after {
+  content: "#";
+}
+
+h2:hover .heading-anchor,
+h3:hover .heading-anchor,
+h4:hover .heading-anchor {
+  opacity: 1;
+}
+
 .feed-link {
   padding-left: 19px;
   background: url("@(resource-ref-url "images/feed.svg")") no-repeat 0 50% / 14px 14px;

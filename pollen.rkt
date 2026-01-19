@@ -14,7 +14,47 @@
 (require net/url)
 (require net/base64)
 (require racket/function)
+(require racket/string)
 (provide (all-defined-out))
+
+; Converts a string to a URL-friendly slug for use as an anchor ID.
+; - Converts to lowercase
+; - Replaces spaces with hyphens
+; - Removes non-alphanumeric characters (except hyphens)
+; - Collapses multiple hyphens into one
+; - Trims leading/trailing hyphens
+(define (string->slug str)
+  (let* ([s (string-downcase str)]
+         [s (string-replace s " " "-")]
+         [s (regexp-replace* #rx"[^a-z0-9-]" s "")]
+         [s (regexp-replace* #rx"-+" s "-")]
+         [s (string-trim s "-")])
+    s))
+
+; Helper to extract plain text content from a txexpr or mixed content list.
+(define (elements->string elems)
+  (apply string-append
+         (map (lambda (e)
+                (cond
+                  [(string? e) e]
+                  [(txexpr? e) (elements->string (get-elements e))]
+                  [else ""]))
+              elems)))
+
+; Creates a heading element with an anchor link that appears on hover.
+; The anchor is hidden from screen readers via aria-hidden; the # is added via CSS.
+(define (heading-with-anchor tag . content)
+  (let* ([text (elements->string content)]
+         [slug (string->slug text)])
+    (txexpr tag `((id ,slug))
+            (append content
+                    (list " "
+                          (txexpr 'a `((class "heading-anchor") (href ,(string-append "#" slug)) (aria-hidden "true")) '()))))))
+
+; Heading tag functions with anchor links
+(define (h2 . content) (apply heading-with-anchor 'h2 content))
+(define (h3 . content) (apply heading-with-anchor 'h3 content))
+(define (h4 . content) (apply heading-with-anchor 'h4 content))
 
 (define (release-mode?)
   (equal? (getenv "POLLEN_RELEASE") "1"))
