@@ -37,9 +37,30 @@
 (define (article-anchor dest . exp)
   (txexpr 'a `((href ,(canonical-href (string-append (symbol->string dest) ".html")))) exp))
 
-; TODO: create inline style block when small enough
+; Maximum size in bytes for inlining stylesheets
+(define inline-stylesheet-max-size 4096)
+
+; Creates a stylesheet reference, inlining the CSS if small enough.
+; In release mode and when the stylesheet is below inline-stylesheet-max-size,
+; emits an inline <style> block instead of a <link> element.
 (define (resource-ref-stylesheet-elem #:path path . exp)
-  (txexpr 'link `((rel "stylesheet") (href ,path))))
+  ; Returns the CSS content for a stylesheet path, triggering preprocessing if needed.
+  ; The path should be relative to current-directory (which is set during rendering).
+  ; Returns #f if the file doesn't exist or can't be read.
+  (define (get-stylesheet-content path)
+    (define full-path (build-path (current-directory) path))
+    (define src-path (get-source full-path))
+    (cond
+      ; If there's a pollen source (e.g., .pp preprocessor), use get-doc to get processed content
+      [src-path (get-doc src-path)]
+      ; Otherwise read the file directly if it exists
+      [(file-exists? full-path) (file->string full-path)]
+      [else #f]))
+  
+  (define content (and (release-mode?) (get-stylesheet-content path)))
+  (if (and content (<= (string-length content) inline-stylesheet-max-size))
+      (txexpr 'style '() (list content))
+      (txexpr 'link `((rel "stylesheet") (href ,path)))))
 
 ; TODO: create inline data url when small enough
 (define (resource-ref-url . exp)
