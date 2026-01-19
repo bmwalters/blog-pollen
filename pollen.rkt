@@ -158,7 +158,7 @@
          [rel-path (find-relative-path relative-to full-path)])
     rel-path))
 
-(define (maybe-render-pages pagelist #:h-entries? [h-entries? #f])
+(define (maybe-render-pages pagelist #:h-entries? [h-entries? #t])
   (letrec ([page-name-is? (lambda (name p)
                             (let ([ps (symbol->string p)])
                               (or (string=? ps name)
