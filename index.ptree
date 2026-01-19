@@ -1,6 +1,6 @@
 #lang pollen
 
-@(require (prefix-in posts: "posts/index.ptree"))
+@(require (prefix-in blog: "blog/index.ptree"))
 
 @(define (prefix-pagetree prefix pt)
    (define (prefix-sym s) (string->symbol (string-append prefix (symbol->string s))))
@@ -12,4 +12,4 @@
        (cons 'pagetree-root children)))
 
 index.html
-@(prefix-pagetree "posts/" posts:doc)
+@(prefix-pagetree "blog/" blog:doc)

@@ -1,6 +1,7 @@
 * implement "recent posts" below posts?
 * author-editor separation (feed author separate from post author)
 * out-of-source-tree posts directory? (so the ssg [compiler] is separate from the posts programs)
+* license
 
 URL choice:
 - walters.app/article/bootstrapping-bun

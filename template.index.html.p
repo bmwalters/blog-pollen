@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width">
   <title>@(select 'title metas)</title>
   @(->html (resource-ref-stylesheet-elem #:path "stylesheet.css"))
-  <link rel="alternate" type="application/atom+xml" href="posts/feed.atom" title="@(select 'author metas)' Blog Feed">
+  <link rel="alternate" type="application/atom+xml" href="blog/feed.atom" title="@(select 'author metas)' Blog Feed">
 </head>
 <body>
   <main class="h-card">
