@@ -1,3 +1,4 @@
+* fix xml:base (elfeed open relative link from one article to another. make sure this doesn't mess up homepage link)
 * implement "recent posts" below posts?
 * author-editor separation (feed author separate from post author)
 * out-of-source-tree posts directory? (so the ssg [compiler] is separate from the posts programs)

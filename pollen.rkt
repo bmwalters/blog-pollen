@@ -61,7 +61,7 @@
 
 (define (root . exp)
   `(root ,@(decode-elements exp
-                            #:exclude-tags '(pre)
+                            #:exclude-tags '(pre code)
                             #:txexpr-elements-proc decode-paragraphs
                             #:string-proc smart-quotes)))
 

@@ -6,7 +6,9 @@
 @define-meta[synopsis]{My journey building the Bun JavaScript runtime from source.}
 @define-meta[tag-uri]{tag:walters.app,2026:bootstrapping-bun}
 
-I wanted to try @a[#:href "https://opencode.ai/"]{OpenCode} for LLM-assisted coding. I found that it wasn't easy to install—my distro packaged neither OpenCode itself, nor Bun, the JavaScript runtime @a[#:href "https://github.com/anomalyco/opencode/issues/3877"]{used by} OpenCode. The aur didn't come to the rescue either as the latest revision of the Bun package failed to build.
+This article describes my journey running the build system for the @a[#:href "https://bun.sh"]{Bun} JavaScript toolkit without relying on any of its usual binary dependencies—namely @em{itself}.
+
+It all started when I wanted to try @a[#:href "https://opencode.ai/"]{OpenCode} for LLM-assisted coding. I found that it wasn't easy to install—my distro packaged neither OpenCode itself, nor Bun, the JavaScript runtime @a[#:href "https://github.com/anomalyco/opencode/issues/3877"]{used by} OpenCode. The aur didn't come to the rescue either as the latest revision of the Bun package failed to build.
 
 @em{Note: Bun was packaged for Arch Linux on 2025-12-30 🎉! However Debian, Fedora, and Ubuntu @a[#:href "https://repology.org/project/bun/information"]{still do not package it}.}
 
