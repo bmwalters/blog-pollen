@@ -1,7 +1,7 @@
 #lang pollen
 
 html {
-  background-color: papayawhip; // antiquewhite, oldlace
+  background-color: oldlace;
 }
 
 a {

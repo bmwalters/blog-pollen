@@ -5,6 +5,7 @@
 @define-meta[created]{2026-01-18}
 @define-meta[synopsis]{My journey building the Bun JavaScript runtime from source.}
 @define-meta[tag-uri]{tag:walters.app,2026:bootstrapping-bun}
+@define-meta[hn-id]{46681309}
 
 This article describes my journey running the build system for the @a[#:href "https://bun.sh"]{Bun} JavaScript toolkit without relying on any of its usual binary dependencies—namely @em{itself}.
 
@@ -90,7 +91,7 @@ Error parsing builtin: Unexpected end of script
 [followed by SIGABRT and core dump]
 }
 
-I spun my wheels a little by reading through assert.js and by [using the creduce tool to produce a @article-a['detour-to-creduce]{minimal reproduction of assert.js} in the hopes that a problem in ~400 bytes would be more easy to eyeball than one in ~22,000.
+I spun my wheels a little by reading through assert.js and by @article-a['detour-to-creduce]{using the creduce tool to produce} a minimal reproduction of assert.js in the hopes that a problem in ~400 bytes would be more easy to eyeball than one in ~22,000.
 
 In the end though, the winning debugging strategy was compiling WebKit's JavaScriptCore from source and swapping it in place of the vendored binary (similarly to how I swapped in my own Zig above). Added debug logging revealed that the builtin in question was actually @code{internal/util/inspect.js} (which was prepended to, or perhaps a dependency of, assert.js).
 

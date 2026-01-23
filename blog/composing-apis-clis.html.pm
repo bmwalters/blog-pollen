@@ -4,6 +4,7 @@
 @define-meta[author]{Bradley Walters}
 @define-meta[created]{2026-01-19}
 @define-meta[tag-uri]{tag:walters.app,2026:composing-apis-clis}
+@define-meta[hn-id]{46722074}
 
 It's early 2026. Industry practice is divided on how to structure tool descriptions within the context window of an LLM. One strategy is to provide top-level tools that perform fine grained actions (e.g. @a[#:href "https://gist.github.com/didier-durand/2970be82fec6c84d522f7953ac7881b4/5002ceca092388b6748933265a16de392024f856#file-github-mcp-tools-json-L1272"]{list pull requests} in a GitHub repo). Another increasingly popular strategy is to eschew new tools per se and to simply inform the model of useful shell commands it may invoke. In both cases reusable skills can be defined that give the model tips on how to perform useful work with the tools; the main difference is whether the model emits a direct tool call or instead an @code{exec_bash} call containing a reference to CLIs.
 
@@ -46,17 +47,19 @@ Both points imply that I'll want a wrapper script around restish. The wrapper sc
 
 @h2{API Authorization}
 
-Looking back at the omnibus script that I generated initially, it contained an OAuth 2.0 client to hit Google's authorization flow, get tokens, and refresh them upon expiry. OAuth 2.0 is a standard. A particular set of parameters (Google's OAuth URL, client id, client secret, grant type, scopes) could be thought of as @em{a valid program in the OAuth 2.0 client language}. I, again, just needed an interpreter. I, again, found one.
+Looking back at the omnibus script that I generated initially, it contained an OAuth 2.0 client to hit Google's authorization flow, get tokens, and refresh them upon expiry. OAuth 2.0 is a standard. A particular set of parameters (Google's OAuth URL, client id, client secret, grant type, scopes) could be thought of as @em{a valid program in the OAuth 2.0 client language}.
+
+I, again, just needed an interpreter. I, again, found one.
 
 @a[#:href "https://github.com/SecureAuthCorp/oauth2c"]{oauth2c} is a command-line client for OAuth 2.0-compliant authorization servers. You input the aforementioned program (i.e. URL, grant type, ...) and it begins the ensuing flow (usually by opening your browser) then prints the resulting tokens to stdout.
 
 With this missing piece, what was previously a couple-hundred lines of dense Python is now an order-of-magnitude smaller shell script which performs the logical equivalent of @code{oauth2c "https://accounts.google.com/..." | restish google drive-files-list}.
 
-(Note: as of writing I am waiting for employer permission to publish the script source.)
+I've published the resulting script to @a[#:href "https://github.com/bmwalters/gdrive-client"]{bmwalters/gdrive-client}. The repo also contains a cool method for propagating shell completions.
 
 @h3{Detour: secure token storage for macOS CLI scripts}
 
-While I'm dispensing pro-tips, I should also note that I found a pretty cool and under-documented way to securely store data (like a long-lived refresh token) from a macOS shell script.
+While I'm dispensing pro-tips, I should highlight this pretty cool and under-documented way to securely store data (like a long-lived refresh token) from a macOS shell script.
 
 Let me introduce the problem. The results of Google's OAuth flow are a short-lived access token (to hit APIs; valid for about an hour) and a long-lived refresh token (to mint new access tokens; valid for @strong{6 months}). I wasn't comfortable with leaving that refresh token exposed on my machine. Services like the AWS CLI do indeed store plaintext credentials in @code{~}, but those tend to expire much more frequently than 6 months.
 
@@ -88,7 +91,7 @@ All with only shell pipelines, no bespoke code. Vastly reduced surface area for 
 
 That's all-well-and-good for services which provide machine-readable API specs, but what about those which are less charitable?
 
-Google Groups is one such case. I wanted to export the discussion history from @a[#:href "https://groups.google.com/g/pollenpub/"]{pollenpub} to serve as a Q&A knowledge base while developing @a[#:href "https://groups.google.com/g/pollenpub/"]{this blog site}. However my research turned up no such API from Google.
+Google Groups is one such case. I wanted to export the discussion history from @a[#:href "https://groups.google.com/g/pollenpub/"]{pollenpub} to serve as a Q&A knowledge base while developing @a[#:href "https://github.com/bmwalters/blog-pollen"]{this blog site}. However my research turned up no such API from Google.
 
 I love using LLMs to solve this class of problem. My workflow is as follows:
 @ol{
@@ -102,7 +105,7 @@ I love using LLMs to solve this class of problem. My workflow is as follows:
 
 I've repeated this workflow about three times and I have near-term plans for a couple more.
 
-Note that I haven't tried @em{combining} the above two workflows yet; I haven't asked the model to produce an OpenAPI spec + reverse-engineered OAuth parameters for any site yet, but that's a logical next step.
+Note that I haven't tried @em{combining} the above two workflows yet: I haven't asked the model to produce an OpenAPI spec + reverse-engineered OAuth parameters, but that's a logical next step.
 
 @h2{Conclusion}
 
